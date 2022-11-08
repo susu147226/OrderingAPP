@@ -1,0 +1,191 @@
+{
+  "id": "3029789",
+  "name": "华夏学院测试",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "华夏学院测试",
+  "glyphs": [
+    {
+      "icon_id": "26613299",
+      "name": "crown-fill",
+      "font_class": "crown-fill",
+      "unicode": "e6bb",
+      "unicode_decimal": 59067
+    },
+    {
+      "icon_id": "26613300",
+      "name": "flag-fill",
+      "font_class": "flag-fill",
+      "unicode": "e6bc",
+      "unicode_decimal": 59068
+    },
+    {
+      "icon_id": "26613301",
+      "name": "bell-fill",
+      "font_class": "bell-fill",
+      "unicode": "e6bd",
+      "unicode_decimal": 59069
+    },
+    {
+      "icon_id": "26613302",
+      "name": "dropbox",
+      "font_class": "dropbox",
+      "unicode": "e6be",
+      "unicode_decimal": 59070
+    },
+    {
+      "icon_id": "26613303",
+      "name": "home-fill",
+      "font_class": "home-fill",
+      "unicode": "e6bf",
+      "unicode_decimal": 59071
+    },
+    {
+      "icon_id": "26613304",
+      "name": "plus-circle-fill",
+      "font_class": "plus-circle-fill",
+      "unicode": "e6c0",
+      "unicode_decimal": 59072
+    },
+    {
+      "icon_id": "26613305",
+      "name": "check-circle-fill",
+      "font_class": "check-circle-fill",
+      "unicode": "e6c1",
+      "unicode_decimal": 59073
+    },
+    {
+      "icon_id": "26613306",
+      "name": "heart",
+      "font_class": "heart",
+      "unicode": "e6c2",
+      "unicode_decimal": 59074
+    },
+    {
+      "icon_id": "26613307",
+      "name": "layout-fill",
+      "font_class": "layout-fill",
+      "unicode": "e6c3",
+      "unicode_decimal": 59075
+    },
+    {
+      "icon_id": "26613308",
+      "name": "close-circle-fill",
+      "font_class": "close-circle-fill",
+      "unicode": "e6c4",
+      "unicode_decimal": 59076
+    },
+    {
+      "icon_id": "26613309",
+      "name": "menu",
+      "font_class": "menu",
+      "unicode": "e6c5",
+      "unicode_decimal": 59077
+    },
+    {
+      "icon_id": "26613310",
+      "name": "sound-fill",
+      "font_class": "sound-fill",
+      "unicode": "e6c6",
+      "unicode_decimal": 59078
+    },
+    {
+      "icon_id": "26613311",
+      "name": "search",
+      "font_class": "search",
+      "unicode": "e6c7",
+      "unicode_decimal": 59079
+    },
+    {
+      "icon_id": "26613312",
+      "name": "heart-fill",
+      "font_class": "heart-fill",
+      "unicode": "e6c8",
+      "unicode_decimal": 59080
+    },
+    {
+      "icon_id": "26613313",
+      "name": "plus",
+      "font_class": "plus",
+      "unicode": "e6c9",
+      "unicode_decimal": 59081
+    },
+    {
+      "icon_id": "26613314",
+      "name": "tag-fill",
+      "font_class": "tag-fill",
+      "unicode": "e6ca",
+      "unicode_decimal": 59082
+    },
+    {
+      "icon_id": "26613315",
+      "name": "scan",
+      "font_class": "scan",
+      "unicode": "e6cb",
+      "unicode_decimal": 59083
+    },
+    {
+      "icon_id": "26613316",
+      "name": "setting-fill",
+      "font_class": "setting-fill",
+      "unicode": "e6cc",
+      "unicode_decimal": 59084
+    },
+    {
+      "icon_id": "26613317",
+      "name": "notification-fill",
+      "font_class": "notification-fill",
+      "unicode": "e6cd",
+      "unicode_decimal": 59085
+    },
+    {
+      "icon_id": "26613318",
+      "name": "share",
+      "font_class": "share",
+      "unicode": "e6ce",
+      "unicode_decimal": 59086
+    },
+    {
+      "icon_id": "26613319",
+      "name": "right-arrow",
+      "font_class": "right-arrow",
+      "unicode": "e6cf",
+      "unicode_decimal": 59087
+    },
+    {
+      "icon_id": "26613320",
+      "name": "管理",
+      "font_class": "guanli",
+      "unicode": "e6d0",
+      "unicode_decimal": 59088
+    },
+    {
+      "icon_id": "26613321",
+      "name": "授权",
+      "font_class": "shouquan",
+      "unicode": "e6d1",
+      "unicode_decimal": 59089
+    },
+    {
+      "icon_id": "26613322",
+      "name": "star",
+      "font_class": "star",
+      "unicode": "e6d2",
+      "unicode_decimal": 59090
+    },
+    {
+      "icon_id": "26613323",
+      "name": "user",
+      "font_class": "user",
+      "unicode": "e6d3",
+      "unicode_decimal": 59091
+    },
+    {
+      "icon_id": "26613324",
+      "name": "选中",
+      "font_class": "xuanzhong",
+      "unicode": "e6d4",
+      "unicode_decimal": 59092
+    }
+  ]
+}
