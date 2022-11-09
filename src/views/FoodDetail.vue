@@ -7,11 +7,11 @@
       </template>
     </title-bar>
     <my-loading :isLoading="!foodDetail">
-      <div class="flex-1 overflow-auto pb-[var(--van-action-bar-height)]">
+      <div class="flex-1 overflow-auto pb-[var(--van-action-bar-height)]" ref="foodInfoContent">
         <List v-model:loading="isLoading" :finished="finished" finished-text="没有更多了" @load="loadNextPageComment">
           <!-- 菜品图片 -->
           <div class="w-full h-[230px]">
-            <img v-lazy="baseURL+foodDetail.food_img" class="w-full h-full object-cover" alt="">
+            <img crossorigin="anonymous" v-lazy="baseURL+foodDetail.food_img" class="w-full h-full object-cover" alt="">
           </div>
           <!-- 菜品的基本信息 -->
           <ul class="text-[14px] leading-[24px] box-border p-[5px] border-0 border-b border-dashed border-gray-500">
@@ -34,11 +34,11 @@
             <transition-group enter-active-class="animate__animated animate__slideInUp">
               <div class="comment-item" v-for="item in commentInfoList" :key="item.id">
                 <div class="flex flex-row py-2 items-center">
-                  <img v-lazy="item.userInfo.user_photo" class="w-[40px] h-[40px] rounded-full" alt="">
+                  <img crossorigin="anonymous" v-lazy="baseURL+item.userInfo.user_photo" class="w-[40px] h-[40px] rounded-full" alt="">
                   <div class="flex-1 ml-2">{{item.userInfo.nickName}}</div>
                   <div class="h-[40px] flex flex-col justify-between">
                     <div class="text-[12px] text-gray-600">{{formatDateTime(item.create_time)}}</div>
-                    <Rate v-model="star" color="#ffd21e" void-icon="star" void-color="#eee" />
+                    <Rate v-model="item.star" color="#ffd21e" void-icon="star" void-color="#eee" />
                   </div>
                 </div>
                 <div class="text-[14px] leading-[24px]">
@@ -70,11 +70,16 @@ import {
   List,
   Icon,
   ShareSheet,
-  Toast
+  Toast,
+  ImagePreview,
+  Dialog,
 } from "vant";
 import API from "@/utils/API";
 import { formatDateTime } from "@/utils/DateTimeUtils";
 import useClipboard from "vue-clipboard3";
+import QRCode from "qrcode";
+import html2canvas from "html2canvas";
+
 export default {
   name: "FoodDetail",
   inject: ["baseURL"],
@@ -137,18 +142,96 @@ export default {
       });
     },
     formatDateTime,
-    shareOptionSelect(option, index) {
+    async shareOptionSelect(option, index) {
       if (index === 2) {
-        //说明用户点击的是复制连接
-        const { toClipboard } = useClipboard();
-        toClipboard(
-          `嗨，我发现了一个非常好吃的东西，现在分享给你看一下。${location.href}`
-        ).then(() => {
-          Toast.success("复制成功，快发给你的小伙吧");
-        });
+        this.shareFoodLink();
+      } else if (index === 3) {
+        this.shareFoodPost();
+      } else if (index === 4) {
+        this.shareQRCode();
       }
-
       this.showShare = false;
+    },
+    //分享二维码,我们希望将当前的网址生成二维码
+    shareQRCode() {
+      // DataURL就是base64
+      QRCode.toDataURL(location.href).then((base64Str) => {
+        // 得到了这个base64的字符串以后，我们就可以将这个字符串以图片的形式显示图片，而vant里面就有预览图片
+        ImagePreview({
+          images: [base64Str],
+          onClose() {
+            Dialog.confirm({
+              title: "请确定",
+              message: "要将分享二维码保存在本地吗？",
+            })
+              .then(() => {
+                let a = document.createElement("a");
+                a.href = base64Str;
+                a.download = "分享二维码.png";
+                a.click();
+              })
+              .catch(() => {});
+          },
+        });
+      });
+    },
+    //分享菜品的海报
+    async shareFoodPost() {
+      //给一个拍照的音效
+      let audio = new Audio();
+      audio.src = require("../assets/audio/camera.mp3");
+      audio.play();
+
+      //生成海报
+      let canvas = await html2canvas(this.$refs.foodInfoContent, {
+        useCORS: true,
+      });
+      let ctx = canvas.getContext("2d");
+      ctx.save();
+      let x = parseInt(canvas.style.width) / 2;
+      let y = parseInt(canvas.style.height) / 2;
+      ctx.translate(x, y);
+      ctx.fillStyle = "red";
+      ctx.font = "36px 微软雅黑";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.rotate(-Math.PI / 4);
+      //创建渐变
+      let grd = ctx.createLinearGradient(-x, -y, canvas.width, canvas.height);
+      grd.addColorStop(0, "red");
+      grd.addColorStop(0.5, "gold");
+      grd.addColorStop(1, "blue");
+      ctx.fillStyle = grd;
+      ctx.fillText("H2204·美食分享", 0, 0);
+      ctx.restore();
+      //创建二维码的图片，画在海报上面
+      let qrCodeBase64Str = await QRCode.toDataURL(location.href);
+      let img = new Image();
+      img.src = qrCodeBase64Str;
+      img.onload = () => {
+        ctx.drawImage(img, 10, 50, 100, 100);
+        //将canvas上面的信息转换成base64的字符串
+        let base64Str = canvas.toDataURL("image/png");
+        ImagePreview({
+          images: [base64Str],
+          className: "animate__animated animate__bounceIn",
+        });
+        //下载海报图片
+        let a = document.createElement("a");
+        a.href = base64Str;
+        a.download = `${this.foodDetail.food_name}海报.png`;
+        a.click();
+      };
+    },
+    //分享菜品的链接
+    shareFoodLink() {
+      //说明用户点击的是复制连接
+      const { toClipboard } = useClipboard();
+      toClipboard(
+        `嗨，我发现了一个非常好吃的东西，现在分享给你看一下。${location.href}`
+      ).then(() => {
+        Toast.success("复制成功，快发给你的小伙吧");
+      });
     },
   },
   components: {
