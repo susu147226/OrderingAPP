@@ -21,27 +21,27 @@ const router = createRouter({
     path: "/Home",
     name: "Home",
     component: Home,
-    children:[
+    children: [
       {
-        path:"ChooseFood",
-        name:"ChooseFood",
-        component:ChooseFood
-      },{
-        path:"Order",
-        name:"Order",
-        component:Order
-      },{
-        path:"Category",
-        name:"Category",
-        component:Category
-      },{
-        path:"My",
-        name:"My",
-        component:My
+        path: "ChooseFood",
+        name: "ChooseFood",
+        component: ChooseFood
+      }, {
+        path: "Order",
+        name: "Order",
+        component: Order
+      }, {
+        path: "Category",
+        name: "Category",
+        component: Category
+      }, {
+        path: "My",
+        name: "My",
+        component: My
       }
     ]
   }, {
-    path: "/FoodDetail",
+    path: "/FoodDetail/:id",
     name: "FoodDetail",
     component: FoodDetail
   }

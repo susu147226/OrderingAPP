@@ -15,6 +15,13 @@ const foodInfo = {
                 cid
             }
         })
+    },
+    findById(id) {
+        return axiosInstance.get(`/foodInfo/findById`, {
+            params: {
+                id
+            }
+        })
     }
 }
 

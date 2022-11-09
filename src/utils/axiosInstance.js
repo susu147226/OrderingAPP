@@ -22,6 +22,7 @@ axiosInstance.interceptors.response.use(resp => {
     }
 }, error => {
     //这一种情况就是服务器错误 ，后端错误，如500，403,404等
+    console.log(error);
     return Promise.reject(error);
 });
 

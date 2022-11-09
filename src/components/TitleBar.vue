@@ -1,6 +1,6 @@
 <template>
   <div class="title-bar">
-    <div class="left-back" v-if="showBack">
+    <div class="left-back" v-if="showBack" @click="$router.back()">
       <span class="iconfont icon-fanhui"></span>
       返回
     </div>
@@ -18,7 +18,7 @@ export default {
       type: Boolean,
       default: false,
     },
-  },
+  }
 };
 </script>
 <style scoped lang="scss">
