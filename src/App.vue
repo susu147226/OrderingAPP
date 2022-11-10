@@ -5,7 +5,7 @@
 <script>
 export default {
   name: "App",
-};
+}
 </script>
 <style lang="scss">
 //这个地方不要加scoped，因为这是所有组件的根组件，后期如果需要设置全局样式，可以只设置在这里就可以了

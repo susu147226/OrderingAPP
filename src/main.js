@@ -1,6 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+import store from './store';
+
+
 import "./assets/scss/comm.scss";
 //导入了vant的样式
 import "vant/lib/index.css";
@@ -40,4 +43,5 @@ app.use(Lazyload, {
 
 
 app.use(router);
+app.use(store);
 app.mount("#app");
