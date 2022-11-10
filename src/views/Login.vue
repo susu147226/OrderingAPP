@@ -63,7 +63,6 @@ export default {
       try {
         let result = await API.userInfo.checkLogin(this.loginUser);
         Toast.success("登录成功");
-        console.log(result);
         // this.$store.dispatch("setLoginUserInfo",result.loginUserInfo);   //旧的写支
         this.setLoginUserInfo(result.loginUserInfo);
         this.setToken(result.token);

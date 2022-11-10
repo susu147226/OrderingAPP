@@ -1,5 +1,6 @@
 import { createStore } from 'vuex';
 import createPersistedState from "vuex-persistedstate";
+import Cookie from "js-cookie";
 
 export default createStore({
   // 存储状态
@@ -43,7 +44,12 @@ export default createStore({
   plugins: [
     // 这里可以加载很多插件，如异步转同步插件，如持久化插件
     createPersistedState({
-      storage: window.sessionStorage
+      //后期如果给还要实现其它的方案也是可以的，我们还有一个框架也行，叫web-storeage-cache
+      storage: {
+        getItem: key => Cookie.get(key),
+        setItem: (key, value) => Cookie.set(key, value, { expires: 30 }),
+        removeItem: key => Cookie.remove(key)
+      }
     })
   ]
 })

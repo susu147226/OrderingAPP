@@ -1,9 +1,9 @@
 <template>
   <page-view class="flex flex-col">
     <title-bar :show-back="true">
-      【{{foodDetail?.food_name}}】菜品的详细
+      【{{ foodDetail?.food_name }}】菜品的详细
       <template #menu>
-        <Icon name="share-o" :size="22" @click="showShare=true" />
+        <Icon name="share-o" :size="22" @click="showShare = true" />
       </template>
     </title-bar>
     <my-loading :isLoading="!foodDetail">
@@ -11,21 +11,22 @@
         <List v-model:loading="isLoading" :finished="finished" finished-text="没有更多了" @load="loadNextPageComment">
           <!-- 菜品图片 -->
           <div class="w-full h-[230px]">
-            <img crossorigin="anonymous" v-lazy="baseURL+foodDetail.food_img" class="w-full h-full object-cover" alt="">
+            <img crossorigin="anonymous" v-lazy="baseURL + foodDetail.food_img" class="w-full h-full object-cover"
+              alt="">
           </div>
           <!-- 菜品的基本信息 -->
           <ul class="text-[14px] leading-[24px] box-border p-[5px] border-0 border-b border-dashed border-gray-500">
             <li>
-              <span class="font-bold">菜品名称：</span>{{foodDetail.food_name}}
+              <span class="font-bold">菜品名称：</span>{{ foodDetail.food_name }}
             </li>
             <li>
-              <span class="font-bold">菜品价格：</span>￥ {{foodDetail.price}}
+              <span class="font-bold">菜品价格：</span>￥ {{ foodDetail.price }}
             </li>
             <li>
-              <span class="font-bold">菜品分类：</span>{{foodDetail.categoryInfo.category_name}}
+              <span class="font-bold">菜品分类：</span>{{ foodDetail.categoryInfo.category_name }}
             </li>
             <li class="indent-[2em]">
-              {{foodDetail.food_desc}}
+              {{ foodDetail.food_desc }}
             </li>
           </ul>
           <!-- 评论信息 -->
@@ -34,15 +35,16 @@
             <transition-group enter-active-class="animate__animated animate__slideInUp">
               <div class="comment-item" v-for="item in commentInfoList" :key="item.id">
                 <div class="flex flex-row py-2 items-center">
-                  <img crossorigin="anonymous" v-lazy="baseURL+item.userInfo.user_photo" class="w-[40px] h-[40px] rounded-full" alt="">
-                  <div class="flex-1 ml-2">{{item.userInfo.nickName}}</div>
+                  <img crossorigin="anonymous" v-lazy="baseURL + item.userInfo.user_photo"
+                    class="w-[40px] h-[40px] rounded-full" alt="">
+                  <div class="flex-1 ml-2">{{ item.userInfo.nickName }}</div>
                   <div class="h-[40px] flex flex-col justify-between">
-                    <div class="text-[12px] text-gray-600">{{formatDateTime(item.create_time)}}</div>
+                    <div class="text-[12px] text-gray-600">{{ formatDateTime(item.create_time) }}</div>
                     <Rate v-model="item.star" color="#ffd21e" void-icon="star" void-color="#eee" />
                   </div>
                 </div>
                 <div class="text-[14px] leading-[24px]">
-                  {{item.comment_text}}
+                  {{ item.comment_text }}
                 </div>
               </div>
             </transition-group>
@@ -50,11 +52,12 @@
         </List>
       </div>
       <ActionBar>
-        <ActionBarIcon icon="cart-o" text="购物车" badge="0"></ActionBarIcon>
-        <ActionBarIcon icon="balance-o" text="金额" badge="0"></ActionBarIcon>
+        <ActionBarIcon icon="cart-o" text="购物车" :badge="totalCount"></ActionBarIcon>
+        <ActionBarIcon icon="balance-o" text="金额" :badge="totalPrice"></ActionBarIcon>
         <ActionBarIcon icon="star" text="已收藏" color="#ff5000"></ActionBarIcon>
-        <ActionBarButton type="warning" text="加入购物车"></ActionBarButton>
-        <ActionBarButton type="danger" text="立即购买"></ActionBarButton>
+        <ActionBarButton :loading="isAddtoShopCarting" type="warning" @click="addToShopCart" text="加入购物车">
+        </ActionBarButton>
+        <ActionBarButton type="danger" text="立即购买" @click="toShopCartList"></ActionBarButton>
       </ActionBar>
     </my-loading>
   </page-view>
@@ -79,6 +82,7 @@ import { formatDateTime } from "@/utils/DateTimeUtils";
 import useClipboard from "vue-clipboard3";
 import QRCode from "qrcode";
 import html2canvas from "html2canvas";
+import { mapGetters } from "vuex";
 
 export default {
   name: "FoodDetail",
@@ -103,6 +107,11 @@ export default {
       ],
       // 是否显示分享的面板
       showShare: false,
+      // 底部购物车的总计信息
+      totalPrice: 0,
+      totalCount: 0,
+      //是否正在加入购物车这个过程
+      isAddtoShopCarting: false
     };
   },
   async created() {
@@ -110,8 +119,13 @@ export default {
     this.fid = id;
     await this.findById(id);
     await this.getCommentInfoListByFid({ fid: id, pageIndex: this.pageIndex });
+    // 当用户登录以后，才获取息的购物车
+    if (this.loginUserInfo) {
+      await this.getMyShopCartTotalInfo();
+    }
   },
   computed: {
+    ...mapGetters(["loginUserInfo"]),
     finished() {
       return this.pageIndex >= this.pageCount;
     },
@@ -170,7 +184,7 @@ export default {
                 a.download = "分享二维码.png";
                 a.click();
               })
-              .catch(() => {});
+              .catch(() => { });
           },
         });
       });
@@ -233,6 +247,49 @@ export default {
         Toast.success("复制成功，快发给你的小伙吧");
       });
     },
+    //获取我的获取车的总计信息
+    async getMyShopCartTotalInfo() {
+      let result = await API.shopCart.getMyShopCartTotalInfo();
+      this.totalPrice = result.totalPrice;
+      this.totalCount = result.totalCount;
+    },
+    // 添加到购物车
+    async addToShopCart() {
+      // 如果用户没有登录 ，弹出询问框，问一下用户是否需要登录
+      if (this.loginUserInfo) {
+        //用户登录了
+        this.isAddtoShopCarting = true;
+        await API.shopCart.addToShopCart({ fid: this.foodDetail.id, count: 1 });
+        Toast.success("加入购物车成功");
+        //加入成功以后，要重新获取自己的购物车的总计信息
+        await this.getMyShopCartTotalInfo();
+        this.isAddtoShopCarting = false;
+      }
+      else {
+        Dialog.confirm({
+          title: "提示",
+          message: "你还没有登录，现在去登录吗?"
+        }).then(() => {
+          this.$router.push({ name: "Login" });
+
+        }).catch(() => {
+        })
+      }
+    },
+    toShopCartList() {
+      if (this.loginUserInfo) {
+        this.$router.push({ name: "ShopCartList" });
+      }
+      else {
+        //说明用户没有登录
+        Dialog.confirm({
+          title: "提示",
+          message: "你还没有登录，现在去登录吗?"
+        }).then(() => {
+          this.$router.push({ name: "Login" });
+        }).catch(() => { })
+      }
+    }
   },
   components: {
     ActionBar,
@@ -246,4 +303,5 @@ export default {
 };
 </script>
 <style>
+
 </style>

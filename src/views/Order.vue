@@ -4,8 +4,9 @@
     </page-view>
 </template>
 <script>
+
 export default {
-    name:"Order"
+    name:"Order",
 };
 </script>
 <style scoped>

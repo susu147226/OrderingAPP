@@ -8,6 +8,7 @@ import Order from "../views/Order.vue";
 import Category from "../views/Category.vue";
 import My from "../views/My.vue";
 import Register from "../views/Register.vue";
+import ShopCartList from "../views/ShopCartList.vue";
 
 
 const router = createRouter({
@@ -54,6 +55,11 @@ const router = createRouter({
     path: "/Register",
     name: "Register",
     component: Register
+  },
+  {
+    path: "/ShopCartList",
+    name: "ShopCartList",
+    component: ShopCartList
   }
   ]
 })
