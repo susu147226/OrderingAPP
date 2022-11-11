@@ -3,7 +3,7 @@
         <title-bar :show-back="true">购物车列表</title-bar>
         <my-loading :isLoading="isFirstLoading">
             <div class="flex-1 overflow-auto pb-[var(--van-submit-bar-height)]">
-                <Tabs animated>
+                <Tabs animated v-model:active="selectedIndex">
                     <Tab title="购物车列表">
                         <List
                             finished-text="数据已经加载完毕"
@@ -36,16 +36,21 @@
                             </TransitionGroup>
                         </List>
                     </Tab>
-                    <Tab title="地址列表">2</Tab>
+                    <Tab title="地址列表">
+                        <AddressList
+                            v-model="chosenAddressId"
+                            :list="myAddressInfoList">
+                        </AddressList>
+                    </Tab>
                 </Tabs>
             </div>
-            <SubmitBar :price="totalMoney" button-text="提交订单"></SubmitBar>
+            <SubmitBar :price="totalMoney" button-text="提交订单" @submit="submitOrder"></SubmitBar>
         </my-loading>
 
     </page-view>
 </template>
 <script>
-import { Tab, Tabs, Card, Stepper, SwipeCell, Button, Dialog, SubmitBar, List } from "vant";
+import { Tab, Tabs, Card, Stepper, SwipeCell, Button, Dialog, SubmitBar, List, AddressList, Notify, Toast } from "vant";
 import API from "@/utils/API";
 export default {
     name: "ShopCartList",
@@ -57,7 +62,13 @@ export default {
             pageCount: 0,
             shopCartListData: [],
             isLoading: false,
-            isFirstLoading: true
+            isFirstLoading: true,
+            // 我的地址列表
+            myAddressInfoList: [],
+            // 选择地址的id
+            chosenAddressId: "",
+            // tab页面的选中的那个索引
+            selectedIndex: 0,
         }
     },
     computed: {
@@ -73,7 +84,10 @@ export default {
         }
     },
     created() {
+        // 获取我的购物车
         this.getShopCartListByPage({ pageIndex: this.pageIndex });
+        //获取我的地址
+        this.getMyAddressInfoList();
     },
     methods: {
         async getShopCartListByPage({ pageIndex }) {
@@ -108,15 +122,60 @@ export default {
         loadNextShopCartPage() {
             this.pageIndex++;
             this.getShopCartListByPage({ pageIndex: this.pageIndex });
+        },
+        async getMyAddressInfoList() {
+            let result = await API.addressInfo.getMyAddressInfoList();
+            let list = result.map(item => {
+                return {
+                    id: item.id,
+                    name: item.person_name,
+                    tel: item.phone,
+                    address: item.address,
+                    tag: item.tag
+                }
+            })
+            this.myAddressInfoList = list;
+        },
+        async submitOrder() {
+            // 提交订单之前,一定要看一下当前的用户有没有选择地址
+            if (this.chosenAddressId) {
+                // 第一步:先构建要提交的订单的参数
+                let orderData = {
+                    aid: this.chosenAddressId,
+                    foodList: this.shopCartListData.map(item => {
+                        return {
+                            fid: item.fid,
+                            count: item.count
+                        }
+                    })
+                }
+
+                await API.orderInfo.submitOrder(orderData);
+                Toast.success("订单提交成功");
+                this.$router.replace({ name: "Order" });
+
+            }
+            else {
+                Notify({
+                    type: "warning",
+                    message: "请先选择地址"
+                });
+                this.selectedIndex = 1;
+            }
         }
     },
     components: {
-        Tab, Tabs, Card, Stepper, SwipeCell, Button, SubmitBar, List
+        Tab, Tabs, Card, Stepper, SwipeCell, Button, SubmitBar, List, AddressList
     }
 }
 </script>
 <style scoped lang="scss">
 .num-box {
     margin-top: 20px;
+}
+
+// 样式穿透 
+:deep(.van-address-list__bottom) {
+    display: none;
 }
 </style>

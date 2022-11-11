@@ -9,6 +9,9 @@ import Category from "../views/Category.vue";
 import My from "../views/My.vue";
 import Register from "../views/Register.vue";
 import ShopCartList from "../views/ShopCartList.vue";
+import AddressInfoList from "../views/AddressInfoList.vue";
+import AddAddressInfo from "../views/AddAddressInfo.vue";
+
 
 
 const router = createRouter({
@@ -51,7 +54,7 @@ const router = createRouter({
     path: "/Login",
     name: "Login",
     component: Login
-  } ,{
+  }, {
     path: "/Register",
     name: "Register",
     component: Register
@@ -60,6 +63,15 @@ const router = createRouter({
     path: "/ShopCartList",
     name: "ShopCartList",
     component: ShopCartList
+  },
+  {
+    path: "/AddressInfoList",
+    name: "AddressInfoList",
+    component: AddressInfoList
+  }, {
+    path: "/AddAddressInfo",
+    name: "AddAddressInfo",
+    component: AddAddressInfo
   }
   ]
 })
