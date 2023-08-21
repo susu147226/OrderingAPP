@@ -5,21 +5,14 @@
             <div class="flex-1 overflow-auto pb-[var(--van-submit-bar-height)]">
                 <Tabs animated v-model:active="selectedIndex">
                     <Tab title="购物车列表">
-                        <List
-                            finished-text="数据已经加载完毕"
-                            :loading="isLoading"
-                            :finished="finished"
+                        <List finished-text="数据已经加载完毕" :loading="isLoading" :finished="finished"
                             @load="loadNextShopCartPage">
                             <TransitionGroup leave-active-class="animate__animated animate__bounceOutLeft">
                                 <SwipeCell v-for="item in shopCartListData" :key="item.id">
-                                    <Card
-                                        :thumb="baseURL + item.foodInfo.food_img"
-                                        :title="item.foodInfo.food_name"
+                                    <Card :thumb="baseURL + item.foodInfo.food_img" :title="item.foodInfo.food_name"
                                         :price="item.foodInfo.price">
                                         <template #tags>
-                                            <Stepper
-                                                @plus="plusOne(item.fid)"
-                                                @minus="minusOne(item.fid)"
+                                            <Stepper @plus="plusOne(item.fid)" @minus="minusOne(item.fid)"
                                                 class="num-box" min="1" max="100" v-model="item.count" theme="round"
                                                 button-size="16">
                                             </Stepper>
@@ -37,9 +30,7 @@
                         </List>
                     </Tab>
                     <Tab title="地址列表">
-                        <AddressList
-                            v-model="chosenAddressId"
-                            :list="myAddressInfoList">
+                        <AddressList v-model="chosenAddressId" :list="myAddressInfoList">
                         </AddressList>
                     </Tab>
                 </Tabs>

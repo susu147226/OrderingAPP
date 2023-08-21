@@ -12,9 +12,9 @@ const userInfo = {
             }
         });
     },
-    add({nickName,user_sex,user_phone,user_email,user_photo,password}){
-        return axiosInstance.post(`/userInfo/add`,{
-            nickName,user_sex,user_phone,user_email,user_photo,password
+    add({ nickName, user_sex, user_phone, user_email, user_photo, password }) {
+        return axiosInstance.post(`/userInfo/add`, {
+            nickName, user_sex, user_phone, user_email, user_photo, password
         });
     },
     /**
@@ -22,9 +22,9 @@ const userInfo = {
      * @param {{zh,password}} param0 
      * @returns {Promise<Object>} 
      */
-    checkLogin({zh,password}){
-        return axiosInstance.post(`/userInfo/checkLogin`,{
-            zh,password
+    checkLogin({ zh, password }) {
+        return axiosInstance.post(`/userInfo/checkLogin`, {
+            zh, password
         });
     }
 

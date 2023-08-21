@@ -9,7 +9,7 @@ import dayjs from "dayjs";
  * @param {string|Date|Number} _d 
  * @param {string} 格式化的参数
  */
-export const formatDateTime = (_d ,split="YYYY-MM-DD HH:mm:ss")=> {
+export const formatDateTime = (_d, split = "YYYY-MM-DD HH:mm:ss") => {
     //2021-11-17T19:33:45.000Z
     //1667956731356
     let d = dayjs(_d);

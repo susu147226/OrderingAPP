@@ -1,40 +1,45 @@
 <template>
-  <page-view class="home-page">
-    <div class="content-box">
-      <router-view></router-view>
-    </div>
-    <ul class="tab-bar">
-      <router-link :to="{name:'ChooseFood'}" custom #default="{navigate,isActive}">
-        <li @click="navigate" :class="{selected:isActive}">
-          <span class="iconfont icon-dropbox"></span>
-          点餐
-        </li>
-      </router-link>
-      <router-link :to="{name:'Order'}" custom #default="{navigate,isActive}">
-        <li @click="navigate" :class="{selected:isActive}">
-          <span class="iconfont icon-layout-fill"></span>  
-          订单
-        </li>
-      </router-link>
-      <router-link :to="{name:'Category'}" custom #default="{navigate,isActive}">
-        <li @click="navigate" :class="{selected:isActive}">
-          <span class="iconfont icon-tag-fill"></span>
-          分类
-        </li>
-      </router-link>
-      <router-link :to="{name:'My'}" custom #default="{navigate,isActive}">
-        <li @click="navigate" :class="{selected:isActive}">
-          <span class="iconfont icon-user"></span>
-          我的
-        </li>
-      </router-link>
+    <page-view class="home-page">
+        <div class="content-box">
+            <!-- 在二级路由上面添加了keep-alive,这样tabBar里面的4个页面就不会被销毁掉 -->
+            <router-view #default="{ Component }">
+                <keep-alive>
+                    <component :is="Component"></component>
+                </keep-alive>
+            </router-view>
+        </div>
+        <ul class="tab-bar">
+            <router-link :to="{ name: 'ChooseFood' }" custom #default="{ navigate, isActive }">
+                <li @click="navigate" :class="{ selected: isActive }">
+                    <span class="iconfont icon-dropbox"></span>
+                    点餐
+                </li>
+            </router-link>
+            <router-link :to="{ name: 'Order' }" custom #default="{ navigate, isActive }">
+                <li @click="navigate" :class="{ selected: isActive }">
+                    <span class="iconfont icon-layout-fill"></span>
+                    订单
+                </li>
+            </router-link>
+            <router-link :to="{ name: 'Category' }" custom #default="{ navigate, isActive }">
+                <li @click="navigate" :class="{ selected: isActive }">
+                    <span class="iconfont icon-tag-fill"></span>
+                    分类
+                </li>
+            </router-link>
+            <router-link :to="{ name: 'My' }" custom #default="{ navigate, isActive }">
+                <li @click="navigate" :class="{ selected: isActive }">
+                    <span class="iconfont icon-user"></span>
+                    我的
+                </li>
+            </router-link>
 
-    </ul>
-  </page-view>
+        </ul>
+    </page-view>
 </template>
 <script>
 export default {
-  name: "Home",
+    name: "Home",
 };
 </script>
 <style scoped lang="scss">
@@ -46,37 +51,41 @@ export default {
 //如果没有url就不会通过url-loader去处理
 
 .home-page {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .content-box {
-  flex: 1;
-  overflow: auto;
+    flex: 1;
+    overflow: auto;
 }
+
 .tab-bar {
-  height: 55px;
-  border-top: 1px solid lightgray;
-  box-sizing: border-box;
-  background-color: white;
-  display: flex;
-  justify-content: space-around;
-  > li {
-    width: 55px;
-    height: 100%;
+    height: 55px;
+    border-top: 1px solid lightgray;
     box-sizing: border-box;
-    font-size: 12px;
+    background-color: white;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    &.selected{
-      color: $primaryColor;
-      font-weight: bold;
+    justify-content: space-around;
+
+    >li {
+        width: 55px;
+        height: 100%;
+        box-sizing: border-box;
+        font-size: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        &.selected {
+            color: $primaryColor;
+            font-weight: bold;
+        }
+
+        .iconfont {
+            font-size: 22px;
+        }
     }
-    .iconfont{
-      font-size: 22px;
-    }
-  }
 }
 </style>
